@@ -9,7 +9,7 @@ python bert_qa.py \
   --do_lower_case \
   --train_file $DATA_DIR/train_200.json \
   --predict_file $DATA_DIR/test_200.json \
-  --per_gpu_train_batch_size 32 \
+  --per_gpu_train_batch_size 16 \
   --learning_rate 3e-5 \
   --num_train_epochs 3.0 \
   --max_seq_length 384 \
