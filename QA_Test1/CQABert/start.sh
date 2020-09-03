@@ -14,4 +14,5 @@ python bert_qa.py \
   --num_train_epochs 3.0 \
   --max_seq_length 384 \
   --doc_stride 128 \
-  --output_dir output
+  --output_dir output \
+  --save_steps 1000

@@ -8,11 +8,12 @@ that a question is unanswerable.
 import argparse
 import collections
 import json
-import numpy as np
 import os
 import re
 import string
 import sys
+
+import numpy as np
 
 
 class EVAL_OPTS():
@@ -357,13 +358,16 @@ def find_all_best_thresh_v2(main_eval, preds, exact_raw, f1_raw, na_probs,
 
 def main(OPTS):
     with open(OPTS.data_file) as f:
-        dataset_json = json.load(f)
+        dataset_json = json.load(f,encoding="utf-8")
         dataset = dataset_json['data']
+
     with open(OPTS.pred_file) as f:
-        preds = json.load(f)
+        preds = json.load(f,encoding="utf-8")
+
     if OPTS.na_prob_file:
         with open(OPTS.na_prob_file) as f:
-            na_probs = json.load(f)
+            na_probs = json.load(f,encoding="utf-8")
+
     else:
         na_probs = {k: 0.0 for k in preds}
     qid_to_has_ans = make_qid_to_has_ans(dataset)  # maps qid to True/False
