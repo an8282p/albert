@@ -33,7 +33,11 @@ class TF_IDF():
     def get_seg_docs(self):
         _seg_docs = []
         FOLDER_NAME = 'data'
+<<<<<<< HEAD
         DOCUMENT = 'data_2200_512.json'
+=======
+        DOCUMENT = 'data_1700_512.json'
+>>>>>>> 6a4ce26cafd1afbfa14b2aa36acd07ff33b78916
         STOPWORD = 'stopword.txt'
         FILE_DIR = os.path.join(os.path.split(os.path.realpath(__file__))[0], FOLDER_NAME)
 
@@ -110,7 +114,11 @@ class TF_IDF():
 	        return 0
 def main():
     tf_idf = TF_IDF()
+<<<<<<< HEAD
     topK = tf_idf.get_topK_idf(10000, True)
+=======
+    topK = tf_idf.get_topK_idf(1000, True)
+>>>>>>> 6a4ce26cafd1afbfa14b2aa36acd07ff33b78916
     #保存bag of word
     tf_idf.set_bag_of_word(set(topK.keys()))
     #得到文章第1篇跟第11篇的向量
