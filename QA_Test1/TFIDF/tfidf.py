@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# encoding: utf-8
-__author__ = 'Larix'
-
 import jieba
 import math
 import os
 import json
+import jieba.posseg as pseg
 
 from collections import OrderedDict
 
@@ -27,17 +24,13 @@ class TF_IDF():
                 data = json.loads(file.read())
         elif type == 'txt':
             with open(path, 'r', encoding='utf-8') as file:
-	            data = file.read()
+                data = file.read()
         return data
 
     def get_seg_docs(self):
         _seg_docs = []
-        FOLDER_NAME = 'data'
-<<<<<<< HEAD
-        DOCUMENT = 'data_2200_512.json'
-=======
-        DOCUMENT = 'data_1700_512.json'
->>>>>>> 6a4ce26cafd1afbfa14b2aa36acd07ff33b78916
+        FOLDER_NAME = 'data2'
+        DOCUMENT = 'news_data.json'
         STOPWORD = 'stopword.txt'
         FILE_DIR = os.path.join(os.path.split(os.path.realpath(__file__))[0], FOLDER_NAME)
 
@@ -73,10 +66,10 @@ class TF_IDF():
                 self.idf[word] = math.log10(len(self.seg_docs) / df)
 
     def tf(self, index, word):
-    	return self.tf[index][word]
+        return self.tf[index][word]
 
     def idf(self, word):
-    	return self.idf[word]
+        return self.idf[word]
 
     def tf_idf(self, index, word):
         return self.tf[index][word]*self.idf[word]
@@ -98,27 +91,23 @@ class TF_IDF():
         self.bow = bow
 
     def get_text_vector(self, index):
-        return  [1*self.tf_idf(index, w) if w in jieba.lcut(self.docs[index]['content']) else 0 for w in self.bow]
+        return [1*self.tf_idf(index, w) if w in jieba.lcut(self.docs[index]['content']) else 0 for w in self.bow]
 
     def cosine_similarity(self, v1, v2):
-	    #compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)
-	    sum_xx, sum_xy, sum_yy = 0.0, 0.0, 0.0
-	    for i in range(0, len(v1)):
-	    	x, y = v1[i], v2[i]
-	    	sum_xx += math.pow(x, 2)
-	    	sum_yy += math.pow(y, 2)
-	    	sum_xy += x * y
-	    try:
-	        return sum_xy / math.sqrt(sum_xx * sum_yy)
-	    except ZeroDivisionError:
-	        return 0
+        #compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)
+        sum_xx, sum_xy, sum_yy = 0.0, 0.0, 0.0
+        for i in range(0, len(v1)):
+            x, y = v1[i], v2[i]
+            sum_xx += math.pow(x, 2)
+            sum_yy += math.pow(y, 2)
+            sum_xy += x * y
+        try:
+            return sum_xy / math.sqrt(sum_xx * sum_yy)
+        except ZeroDivisionError:
+            return 0
 def main():
     tf_idf = TF_IDF()
-<<<<<<< HEAD
-    topK = tf_idf.get_topK_idf(10000, True)
-=======
-    topK = tf_idf.get_topK_idf(1000, True)
->>>>>>> 6a4ce26cafd1afbfa14b2aa36acd07ff33b78916
+    topK = tf_idf.get_topK_idf(50000, True)
     #保存bag of word
     tf_idf.set_bag_of_word(set(topK.keys()))
     #得到文章第1篇跟第11篇的向量
@@ -127,8 +116,24 @@ def main():
     #計算文件與文件的cosine similarity
     score1 = tf_idf.cosine_similarity(vec1, vec1)
     score2 = tf_idf.cosine_similarity(vec1, vec2)
+    #print(topK, score1, score2)
+    f = open("data2\\result.csv", "a")
+    f.write("詞,詞性,P\n")
 
-    print(topK, score1, score2)
+    for k, v in topK.items():
+        try:
+            _k = str(k)
+            words = pseg.cut(_k)
+            n = ""
+            for _w in words:
+                n = _w.flag
+            s = _k + "," + n + "," + str(v) + "\n"
+            f.write(s)
+        except Exception as e:
+            print(e)
+            continue
+
+    f.close()
 
 
 if __name__ == '__main__':
